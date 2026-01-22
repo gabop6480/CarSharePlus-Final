@@ -1,38 +1,32 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:CarSharePlusShared.ViewModels;assembly=CarSharePlusShared"
              x:Class="CarSharePlusMobileExtended.Pages.PerfilPage"
-             Title="Mi Perfil">
+             x:DataType="vm:PerfilViewModel"
+             Title="Mi Perfil" BackgroundColor="#F3F4F6">
+    <VerticalStackLayout Spacing="20" Padding="30">
+        <Frame CornerRadius="50" HeightRequest="100" WidthRequest="100" HorizontalOptions="Center" BackgroundColor="#512BD4" Padding="0">
+            <Label Text="{Binding Usuario.Nombre, StringFormat='{0:F1}'}" TextColor="White" FontSize="40" HorizontalOptions="Center" VerticalOptions="Center"/>
+        </Frame>
 
-    <VerticalStackLayout Padding="20" Spacing="10">
-        <Label Text="Mi Perfil" FontSize="24" FontAttributes="Bold" HorizontalOptions="Center" />
+        <Label Text="{Binding Usuario.Nombre}" FontSize="24" FontAttributes="Bold" HorizontalOptions="Center" TextColor="#1F2937"/>
 
-        <!-- Datos del usuario -->
-        <Label Text="{Binding Usuario.Nombre}" FontSize="18" />
-        <Label Text="{Binding Usuario.Correo}" FontSize="16" />
-        <Label Text="{Binding Usuario.Telefono}" FontSize="16" />
+        <Frame BackgroundColor="White" CornerRadius="10" Padding="15">
+            <VerticalStackLayout Spacing="10">
+                <Label Text="Correo:" FontAttributes="Bold" TextColor="#512BD4"/>
+                <Label Text="{Binding Usuario.Correo}" TextColor="Black"/>
 
-        <!-- Datos del vehículo -->
-        <Label Text="Vehículo Asignado" FontSize="20" FontAttributes="Bold" Margin="0,20,0,0"/>
-        <Label Text="{Binding Vehiculo.Placa, StringFormat='Placa: {0}'}" />
-        <Label Text="{Binding Vehiculo.Transmision, StringFormat='Transmisión: {0}'}" />
-        <Label Text="{Binding Vehiculo.Energia, StringFormat='Energía: {0}'}" />
-        <Label Text="{Binding Vehiculo.AutonomiaKm, StringFormat='Autonomía: {0} km'}" />
-        <Label Text="{Binding Vehiculo.ConsumoPorKm, StringFormat='Consumo: {0} L/km'}" />
+                <BoxView HeightRequest="1" Color="LightGray"/>
 
-        <!-- Botones que usan el mismo comando con parámetros distintos -->
-        <Button Text="Solicitar Edición"
-                Command="{Binding EnviarSolicitudCommand}"
-                CommandParameter="Edición"
-                BackgroundColor="#34C759"
-                TextColor="White"
-                CornerRadius="8" />
+                <Label Text="Teléfono:" FontAttributes="Bold" TextColor="#512BD4"/>
+                <Label Text="{Binding Usuario.Telefono}" TextColor="Black"/>
 
-        <Button Text="Solicitar Eliminación"
-                Command="{Binding EnviarSolicitudCommand}"
-                CommandParameter="Eliminación"
-                BackgroundColor="Red"
-                TextColor="White"
-                CornerRadius="8" />
+                <BoxView HeightRequest="1" Color="LightGray"/>
+
+                <Label Text="Rol:" FontAttributes="Bold" TextColor="#512BD4"/>
+                <Label Text="{Binding Usuario.Rol}" TextColor="Black"/>
+            </VerticalStackLayout>
+        </Frame>
     </VerticalStackLayout>
 </ContentPage>

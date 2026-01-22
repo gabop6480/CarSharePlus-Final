@@ -1,42 +1,24 @@
-﻿using CarSharePlusShared.Models;
-using System.Net.Http.Json;
+﻿using System.Net.Http.Json;
+using CarSharePlusShared.Models;
+using Microsoft.Maui.Devices;
 
 namespace CarSharePlusShared.Services
 {
     public class UsuarioService
     {
         private readonly HttpClient _httpClient;
-        private readonly string _baseUrl;
 
-        public UsuarioService(HttpClient httpClient, string baseUrl)
+        public UsuarioService()
         {
-            _httpClient = httpClient;
-            _baseUrl = baseUrl + "/api/usuarios";
+            string urlBase = DeviceInfo.Platform == DevicePlatform.Android
+                ? "http://10.0.2.2:5136" : "http://localhost:5136";
+            _httpClient = new HttpClient { BaseAddress = new Uri(urlBase) };
         }
 
-        public async Task<Usuario?> GetPerfilAsync()
+        public async Task<Usuario?> GetUsuarioAsync(int id)
         {
-            try
-            {
-                return await _httpClient.GetFromJsonAsync<Usuario>($"{_baseUrl}/perfil");
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        public async Task<bool> ActualizarPerfilAsync(Usuario usuario)
-        {
-            try
-            {
-                var response = await _httpClient.PutAsJsonAsync($"{_baseUrl}/perfil", usuario);
-                return response.IsSuccessStatusCode;
-            }
-            catch
-            {
-                return false;
-            }
+            try { return await _httpClient.GetFromJsonAsync<Usuario>($"api/usuarios/{id}"); }
+            catch { return null; }
         }
     }
 }

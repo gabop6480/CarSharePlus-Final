@@ -1,19 +1,42 @@
-<Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+﻿<Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
        xmlns:pages="clr-namespace:CarSharePlusMobileExtended.Pages"
-       x:Class="CarSharePlusMobileExtended.AppShell">
+       x:Class="CarSharePlusMobileExtended.AppShell"
+       Title="CarShare+"
+       BackgroundColor="White"
+       ForegroundColor="Black">
 
     <ShellContent
         Title="Login"
         ContentTemplate="{DataTemplate pages:LoginPage}"
-        Route="LoginPage" />
+        Route="LoginPage"
+        Shell.FlyoutBehavior="Disabled"
+        Shell.NavBarIsVisible="False" />
 
     <TabBar Route="Main">
-        <ShellContent Title="Dashboard" 
-                      Icon="dotnet_bot.png" 
-                      ContentTemplate="{DataTemplate pages:DashboardPage}" 
+        <ShellContent Title="Inicio"
+                      Icon="dotnet_bot.png"
+                      ContentTemplate="{DataTemplate pages:DashboardPage}"
                       Route="DashboardPage" />
 
+        <ShellContent Title="Vehículos"
+                      Icon="dotnet_bot.png"
+                      ContentTemplate="{DataTemplate pages:ReservarVehiculoPage}"
+                      Route="ReservarVehiculoPage" />
+
+        <ShellContent Title="Pagos"
+                      Icon="dotnet_bot.png"
+                      ContentTemplate="{DataTemplate pages:PagosPage}"
+                      Route="PagosPage" />
+
+        <ShellContent Title="Perfil"
+                      Icon="dotnet_bot.png"
+                      ContentTemplate="{DataTemplate pages:PerfilPage}"
+                      Route="PerfilPage" />
     </TabBar>
+
+    <MenuItem Text="Cerrar Sesión"
+              IconImageSource="dotnet_bot.png"
+              Clicked="OnLogoutClicked" />
 
 </Shell>

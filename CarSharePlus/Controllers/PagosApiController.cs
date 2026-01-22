@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CarSharePlusShared.Models;
 
-[Route("api/[controller]")]
+[Route("api/auth")]
 [ApiController]
 public class PagosApiController : ControllerBase
 {

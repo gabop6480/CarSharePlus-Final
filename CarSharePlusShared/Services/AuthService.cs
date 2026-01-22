@@ -1,27 +1,18 @@
 ﻿using CarSharePlusShared.Models;
 using System.Net.Http.Json;
 using System.Text.Json;
-using Microsoft.Maui.Devices;
 
 namespace CarSharePlusShared.Services
 {
     public class AuthService
     {
         private readonly HttpClient _httpClient;
+        public static Usuario? UsuarioActual { get; private set; }
 
-        public AuthService()
+        // El constructor recibe el cliente YA configurado en MauiProgram
+        public AuthService(HttpClient httpClient)
         {
-            // CORRECCIÓN: La URL base NO debe incluir "/api/auth" todavía.
-            // Solo la dirección del servidor y el puerto.
-            string urlBase = DeviceInfo.Platform == DevicePlatform.Android
-                ? "http://10.0.2.2:5136"  // Android Emulator
-                : "http://localhost:5136"; // Windows
-
-            _httpClient = new HttpClient
-            {
-                BaseAddress = new Uri(urlBase),
-                Timeout = TimeSpan.FromSeconds(30)
-            };
+            _httpClient = httpClient;
         }
 
         public async Task<Usuario?> LoginAsync(string correo, string password)
@@ -29,37 +20,28 @@ namespace CarSharePlusShared.Services
             try
             {
                 var loginData = new { Correo = correo, Password = password };
-
-                // Opciones para enviar mayúsculas exactas
-                var jsonOptions = new JsonSerializerOptions
-                {
-                    PropertyNamingPolicy = null
-                };
-
-                // Enviamos la petición a la ruta COMPLETA aquí
-                // Resultado final: http://localhost:5136/api/auth/login
-                var response = await _httpClient.PostAsJsonAsync("api/auth/login", loginData, jsonOptions);
+                // IMPORTANTE: Ruta correcta basada en tu Controller
+                var response = await _httpClient.PostAsJsonAsync("api/auth/login", loginData);
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var readOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-                    return await response.Content.ReadFromJsonAsync<Usuario>(readOptions);
+                    var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                    var usuario = await response.Content.ReadFromJsonAsync<Usuario>(options);
+                    UsuarioActual = usuario;
+                    return usuario;
                 }
-                else
-                {
-                    var error = await response.Content.ReadAsStringAsync();
-                    Console.WriteLine($"[ERROR LOGIN] Status: {response.StatusCode}, Detalles: {error}");
-                }
-
-                return null;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[EXCEPCIÓN LOGIN] {ex.Message}");
-                return null;
+                Console.WriteLine($"Error Login: {ex.Message}");
             }
+            return null;
         }
 
-        public Task LogoutAsync() => Task.CompletedTask;
+        public Task LogoutAsync()
+        {
+            UsuarioActual = null;
+            return Task.CompletedTask;
+        }
     }
 }
