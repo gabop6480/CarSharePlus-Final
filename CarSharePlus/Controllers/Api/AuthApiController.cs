@@ -8,7 +8,8 @@ using System.Security.Claims;
 
 namespace CarSharePlus.Controllers.Api
 {
-    [Route("api/[controller]")]
+    // CAMBIO IMPORTANTE: Forzamos la ruta a "api/auth" explícitamente
+    [Route("api/auth")]
     [ApiController]
     public class AuthApiController : ControllerBase
     {
@@ -20,45 +21,44 @@ namespace CarSharePlus.Controllers.Api
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<Usuario>> Login([FromBody] LoginRequest request)
+        public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
-            // 1. Imprimir lo que llega (PARA DEPURAR)
-            Console.WriteLine($"[LOGIN INTENTO] Correo: '{request.Correo}' - Password recibido: '{request.Password}'");
+            // LOGS DE DEPURACIÓN (Míralos en la consola negra del servidor)
+            Console.WriteLine($"[API LOGIN] Intento de: {model.Correo}");
 
-            // 2. Buscar usuario solo por correo primero
+            // 1. Validar que lleguen datos
+            if (string.IsNullOrEmpty(model.Correo) || string.IsNullOrEmpty(model.Password))
+            {
+                Console.WriteLine("[API LOGIN] Fallo: Correo o Password llegaron vacíos (Problema de JSON).");
+                return BadRequest(new { message = "Datos incompletos" });
+            }
+
+            // 2. Buscar usuario
             var usuario = await _context.Usuarios
-                .FirstOrDefaultAsync(u => u.Correo == request.Correo);
+                .FirstOrDefaultAsync(u => u.Correo == model.Correo && u.Password == model.Password);
 
             if (usuario == null)
             {
-                Console.WriteLine("[LOGIN FALLO] El usuario no existe en la BD.");
-                return Unauthorized("Usuario no encontrado.");
+                Console.WriteLine("[API LOGIN] Fallo: Usuario no encontrado o contraseña incorrecta en BD.");
+                return Unauthorized(new { message = "Credenciales incorrectas" });
             }
 
-            // 3. Imprimir lo que hay en la BD (PARA DEPURAR)
-            Console.WriteLine($"[LOGIN BD] Usuario encontrado. Password en BD: '{usuario.Password}'");
+            Console.WriteLine($"[API LOGIN] Éxito: Bienvenido {usuario.Nombre}");
 
-            // 4. Comparación DIRECTA (Texto plano) - Úsalo para probar si esto falla
-            // Si usas Hash, aquí deberías usar BCrypt.Verify o similar.
-            if (usuario.Password != request.Password)
+            // 3. Crear cookie (opcional para API móvil, pero útil si compartes lógica)
+            var claims = new List<Claim>
             {
-                Console.WriteLine("[LOGIN FALLO] La contraseña no coincide.");
-                return Unauthorized("Contraseña incorrecta.");
-            }
+                new Claim(ClaimTypes.Name, usuario.Correo),
+                new Claim(ClaimTypes.Role, usuario.Rol),
+                new Claim("UsuarioId", usuario.Id.ToString())
+            };
 
-            // 5. Login exitoso
-            Console.WriteLine("[LOGIN EXITOSO] Credenciales válidas.");
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var principal = new ClaimsPrincipal(identity);
 
-            // Evitamos devolver la contraseña al cliente por seguridad
-            usuario.Password = "";
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
             return Ok(usuario);
-        }
-
-        // Clase auxiliar para recibir los datos (puedes ponerla dentro del mismo archivo o namespace)
-        public class LoginRequest
-        {
-            public string Correo { get; set; }
-            public string Password { get; set; }
         }
 
         [HttpPost("logout")]
@@ -69,6 +69,7 @@ namespace CarSharePlus.Controllers.Api
         }
     }
 
+    // Clase para recibir los datos
     public class LoginModel
     {
         public string Correo { get; set; }

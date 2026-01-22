@@ -21,33 +21,61 @@ namespace CarSharePlusMobileExtended.ViewModels
         public DashboardViewModel(DashboardService dashboardService)
         {
             _dashboardService = dashboardService;
-            CargarDatosCommand.Execute(null);
+            // Llamamos a cargar datos al iniciar
+            Task.Run(CargarDatos);
         }
 
         [RelayCommand]
         public async Task CargarDatos()
         {
-            var stats = await _dashboardService.GetStatsAsync();
-            if (stats != null)
+            try
             {
-                TotalReservas = stats.TotalReservas;
-                Activas = stats.Activas;
-                Finalizadas = stats.Finalizadas;
-                Canceladas = stats.Canceladas;
-                PromedioDuracionHoras = stats.PromedioDuracionHoras;
+                var stats = await _dashboardService.GetStatsAsync();
+                if (stats != null)
+                {
+                    TotalReservas = stats.TotalReservas;
+                    Activas = stats.Activas;
+                    Finalizadas = stats.Finalizadas;
+                    Canceladas = stats.Canceladas;
+                    PromedioDuracionHoras = stats.PromedioDuracionHoras;
 
-                ActualizarChart();
+                    ActualizarChart();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error cargando dashboard: {ex.Message}");
             }
         }
 
         private void ActualizarChart()
         {
-            var entries = new List<ChartEntry>
+            // CAMBIO: Si no hay datos, mostramos un gráfico gris para que no quede el hueco en blanco
+            if (Activas == 0 && Finalizadas == 0 && Canceladas == 0)
             {
-                new ChartEntry(Activas) { Label = "Activas", ValueLabel = Activas.ToString(), Color = SKColor.Parse("#34C759") },
-                new ChartEntry(Finalizadas) { Label = "Finalizadas", ValueLabel = Finalizadas.ToString(), Color = SKColor.Parse("#007AFF") },
-                new ChartEntry(Canceladas) { Label = "Canceladas", ValueLabel = Canceladas.ToString(), Color = SKColor.Parse("#FF3B30") }
-            };
+                var emptyEntries = new List<ChartEntry>
+                {
+                    new ChartEntry(1)
+                    {
+                        Label = "Sin datos",
+                        ValueLabel = "0",
+                        Color = SKColor.Parse("#E0E0E0")
+                    }
+                };
+                Chart = new DonutChart { Entries = emptyEntries, HoleRadius = 0.4f, LabelTextSize = 30 };
+                return;
+            }
+
+            var entries = new List<ChartEntry>();
+
+            if (Activas > 0)
+                entries.Add(new ChartEntry(Activas) { Label = "Activas", ValueLabel = Activas.ToString(), Color = SKColor.Parse("#34C759") });
+
+            if (Finalizadas > 0)
+                entries.Add(new ChartEntry(Finalizadas) { Label = "Finaliz.", ValueLabel = Finalizadas.ToString(), Color = SKColor.Parse("#007AFF") });
+
+            if (Canceladas > 0)
+                entries.Add(new ChartEntry(Canceladas) { Label = "Cancel.", ValueLabel = Canceladas.ToString(), Color = SKColor.Parse("#FF3B30") });
 
             Chart = new DonutChart { Entries = entries, HoleRadius = 0.4f, LabelTextSize = 32 };
         }

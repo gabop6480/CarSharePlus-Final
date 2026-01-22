@@ -3,7 +3,8 @@ using CommunityToolkit.Maui;
 using CarSharePlusShared.Services;
 using CarSharePlusShared.ViewModels;
 using CarSharePlusMobileExtended.Pages;
-using CarSharePlusMobileExtended.ViewModels; // IMPORTANTE: Aquí está tu DashboardViewModel real
+using CarSharePlusMobileExtended.ViewModels;
+using Microcharts.Maui; // <--- 1. IMPORTANTE: Agregar este using
 
 namespace CarSharePlusMobileExtended
 {
@@ -14,6 +15,7 @@ namespace CarSharePlusMobileExtended
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseMicrocharts() // <--- 2. IMPORTANTE: Inicializar gráficos
                 .UseMauiCommunityToolkit()
                 .ConfigureFonts(fonts =>
                 {
@@ -21,14 +23,21 @@ namespace CarSharePlusMobileExtended
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
-            // Registrar el servicio (sin parámetros extra, porque ya los maneja internamente)
-            builder.Services.AddSingleton<CarSharePlusShared.Services.AuthService>();
+#if DEBUG
+            builder.Logging.AddDebug();
+#endif
 
-            // Registrar ViewModels y Pages
-            builder.Services.AddTransient<CarSharePlusShared.ViewModels.LoginViewModel>();
-            builder.Services.AddTransient<CarSharePlusMobileExtended.Pages.LoginPage>();
-            builder.Services.AddTransient<CarSharePlusMobileExtended.ViewModels.DashboardViewModel>();
-            builder.Services.AddTransient<CarSharePlusMobileExtended.Pages.DashboardPage>();
+            // Servicios
+            builder.Services.AddSingleton<AuthService>();
+            builder.Services.AddSingleton<DashboardService>(); // Asegúrate de registrar este servicio también
+
+            // ViewModels
+            builder.Services.AddTransient<LoginViewModel>();
+            builder.Services.AddTransient<DashboardViewModel>();
+
+            // Pages
+            builder.Services.AddTransient<LoginPage>();
+            builder.Services.AddTransient<DashboardPage>();
 
             return builder.Build();
         }
