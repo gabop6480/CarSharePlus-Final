@@ -1,0 +1,94 @@
+﻿@model IEnumerable<CarSharePlusShared.Models.Usuario>
+
+@{
+    ViewData["Title"] = "Lista de Usuarios";
+}
+
+<h2>Usuarios</h2>
+<hr />
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success"><i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i> @TempData["ErrorMessage"]</div>
+}
+
+<p>
+    <a class="btn btn-success" href="@Url.Action("Create")">
+        <i class="fas fa-user-plus"></i> Crear Nuevo Usuario
+    </a>
+</p>
+
+<!-- Buscador -->
+<form method="get" asp-action="Index" class="form-inline mb-3">
+    <input type="text" name="searchString" class="form-control me-2" placeholder="Buscar por nombre o correo..." />
+    <button type="submit" class="btn btn-primary">
+        <i class="fas fa-search"></i> Buscar
+    </button>
+</form>
+
+<p>
+    Total de usuarios: <span class="badge bg-primary">@Model.Count()</span> |
+    Total de vehículos asignados: <span class="badge bg-info">@Model.Sum(u => u.Vehiculos?.Count ?? 0)</span>
+</p>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Nombre</th>
+                <th>Correo</th>
+                <th>Teléfono</th>
+                <th>Vehículos asignados</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (!Model.Any())
+            {
+                <tr>
+                    <td colspan="5" class="text-center text-muted">No hay usuarios registrados.</td>
+                </tr>
+            }
+            else
+            {
+                @foreach (var usuario in Model)
+                {
+                    <tr>
+                        <td>@usuario.Nombre</td>
+                        <td><a href="mailto:@usuario.Correo">@usuario.Correo</a></td>
+                        <td><a href="tel:@usuario.Telefono">@usuario.Telefono</a></td>
+                        <td>
+                            @if (usuario.Vehiculos != null && usuario.Vehiculos.Count > 0)
+                            {
+                                <span class="badge bg-success">@usuario.Vehiculos.Count</span>
+                                <i class="fas fa-car text-info" title="Tiene vehículos asignados"></i>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">0</span>
+                                <i class="fas fa-car-side text-muted" title="Sin vehículos"></i>
+                            }
+                        </td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a class="btn btn-info btn-sm me-1" href="@Url.Action("Details", new { id = usuario.Id })">
+                                    <i class="fas fa-info-circle"></i> Detalles
+                                </a>
+                                <a class="btn btn-warning btn-sm me-1" href="@Url.Action("Edit", new { id = usuario.Id })">
+                                    <i class="fas fa-edit"></i> Editar
+                                </a>
+                                <a class="btn btn-danger btn-sm" href="@Url.Action("Delete", new { id = usuario.Id })">
+                                    <i class="fas fa-trash"></i> Eliminar
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

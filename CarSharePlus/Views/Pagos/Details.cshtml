@@ -1,0 +1,107 @@
+﻿@model CarSharePlusShared.Models.Pago
+
+@{
+    ViewData["Title"] = "Detalles del Pago";
+
+    var correoActual = User.Identity?.Name;
+    bool esDueñoVehiculo = Model.Reserva?.Vehiculo?.Usuario?.Correo == correoActual;
+    bool esArrendatario = Model.Reserva?.Usuario?.Correo == correoActual;
+}
+
+<h2>@ViewData["Title"]</h2>
+<hr />
+
+<div class="card mb-4">
+    <div class="card-header bg-dark text-white">
+        Información del Pago
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Monto</dt>
+            <dd class="col-sm-9">@Model.Monto.ToString("C")</dd>
+
+            <dt class="col-sm-3">Fecha de Pago</dt>
+            <dd class="col-sm-9">@Model.FechaPago.ToString("dd/MM/yyyy HH:mm")</dd>
+
+            <dt class="col-sm-3">Método</dt>
+            <dd class="col-sm-9">@Model.Metodo</dd>
+
+            <dt class="col-sm-3">Confirmado</dt>
+            <dd class="col-sm-9">
+                @if (Model.Confirmado)
+                {
+                    <span class="badge bg-success">Sí</span>
+                }
+                else
+                {
+                    <span class="badge bg-danger">No</span>
+                }
+            </dd>
+        </dl>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        Detalles de la Reserva
+    </div>
+    <div class="card-body">
+        @if (Model.Reserva != null)
+        {
+            <dl class="row">
+                @* Mostrar diferente según el rol *@
+                @if (esArrendatario)
+                {
+                    <dt class="col-sm-3">Vehículo</dt>
+                    <dd class="col-sm-9">@Model.Reserva.Vehiculo?.Marca @Model.Reserva.Vehiculo?.Modelo (@Model.Reserva.Vehiculo?.Placa)</dd>
+
+                    <dt class="col-sm-3">Estado Reserva</dt>
+                    <dd class="col-sm-9">
+                        @switch (Model.Reserva.Estado)
+                        {
+                            case CarSharePlusShared.Models.EstadoReserva.Pendiente:
+                                <span class="badge bg-warning">Pendiente</span>
+                                break;
+                            case CarSharePlusShared.Models.EstadoReserva.Activa:
+                                <span class="badge bg-success">Activa</span>
+                                break;
+                            case CarSharePlusShared.Models.EstadoReserva.Finalizada:
+                                <span class="badge bg-secondary">Finalizada</span>
+                                break;
+                            case CarSharePlusShared.Models.EstadoReserva.Cancelada:
+                                <span class="badge bg-danger">Cancelada</span>
+                                break;
+                        }
+                    </dd>
+                }
+                else if (esDueñoVehiculo)
+                {
+                    <dt class="col-sm-3">Arrendatario</dt>
+                    <dd class="col-sm-9">@Model.Reserva.Usuario?.Nombre</dd>
+
+                    <dt class="col-sm-3">Vehículo</dt>
+                    <dd class="col-sm-9">@Model.Reserva.Vehiculo?.Marca @Model.Reserva.Vehiculo?.Modelo (@Model.Reserva.Vehiculo?.Placa)</dd>
+
+                    <dt class="col-sm-3">Estado del Pago</dt>
+                    <dd class="col-sm-9">
+                        @if (Model.Confirmado)
+                        {
+                            <span class="badge bg-success">Confirmado</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-warning">Pendiente de Confirmar</span>
+                        }
+                    </dd>
+                }
+            </dl>
+        }
+        else
+        {
+            <p class="text-muted">No se encontró información de la reserva asociada.</p>
+        }
+    </div>
+</div>
+
+<hr />
+<a asp-action="MisPagos" class="btn btn-secondary">Volver al listado</a>

@@ -1,0 +1,114 @@
+﻿@model CarSharePlusShared.ViewModels.VehiculoViewModel
+@using CarSharePlusShared.Models
+
+@{
+    ViewData["Title"] = "Eliminar Vehículo";
+}
+
+<h2 class="text-danger">¿Eliminar este Vehículo?</h2>
+
+<div class="alert alert-warning">
+    <i class="fas fa-exclamation-triangle"></i>
+    <strong>Atención:</strong> Esta acción eliminará el vehículo de forma permanente y no se puede deshacer.
+</div>
+
+<div class="card border-warning mb-3">
+    <div class="card-header bg-warning text-dark">
+        <strong>@Model.Marca @Model.Modelo</strong>
+    </div>
+    <div class="card-body">
+        <p><strong>Placa:</strong> @Model.Placa</p>
+        <p><strong>Año:</strong> @Model.Anio</p>
+
+        <p>
+            <strong>Transmisión:</strong>
+            @switch (Model.Transmision)
+            {
+                case TipoTransmision.Manual:
+                    {
+                        <text><i class="fas fa-cogs text-secondary"></i> Manual</text>
+                        ; break;
+                    }
+                case TipoTransmision.Automatico:
+                    {
+
+                        <text><i class="fas fa-cog text-info"></i> Automático</text>
+                        ; break;
+                    }
+            }
+        </p>
+
+        <p>
+            <strong>Tipo de Energía:</strong>
+            @switch (Model.Energia)
+            {
+                case TipoEnergia.Gasolina:
+                    {
+                        <text><i class="fas fa-gas-pump text-danger"></i> Gasolina</text>
+                        ; break;
+                    }
+                case TipoEnergia.Electrico:
+                    {
+
+                        <text><i class="fas fa-bolt text-success"></i> Eléctrico</text>
+                        ; break;
+                    }
+                case TipoEnergia.Hibrido:
+                    {
+
+                        <text><i class="fas fa-leaf text-warning"></i> Híbrido</text>
+                        ; break;
+                    }
+            }
+        </p>
+
+        <p><strong>Autonomía:</strong> @(Model.AutonomiaKm > 0 ? $"{Model.AutonomiaKm} km" : "No especificada")</p>
+        <p><strong>Consumo por km:</strong> @(Model.ConsumoPorKm > 0 ? $"{Model.ConsumoPorKm} L/km" : "No especificado")</p>
+
+        <p>
+            <p>
+                <strong>Estado:</strong>
+                @if (Model.Disponible)
+                {
+                    <i class="fas fa-check-circle text-success"></i> <span>Disponible</span>
+                }
+                else
+                {
+                    <i class="fas fa-times-circle text-danger"></i> <span>No disponible</span>
+                }
+</p>
+
+        </p>
+
+        <p>
+            <strong>Usuario asignado:</strong>
+            @(string.IsNullOrEmpty(Model.UsuarioNombre)
+                        ? "No asignado"
+                        : $"{Model.UsuarioNombre} - {Model.UsuarioCorreo}")
+        </p>
+
+        @if (!string.IsNullOrEmpty(Model.UsuarioNombre))
+        {
+            <div class="alert alert-danger">
+                <i class="fas fa-user"></i>
+                <strong>Nota:</strong> Este vehículo está asignado a un usuario.
+                La eliminación no afectará al usuario, pero sí eliminará este vehículo de su lista.
+            </div>
+        }
+    </div>
+</div>
+
+<div class="alert alert-danger">
+    <i class="fas fa-trash"></i>
+    <strong>Confirmación:</strong> Si continúas, el vehículo será eliminado definitivamente.
+</div>
+
+<form asp-action="Delete">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">
+        <i class="fas fa-trash"></i> Confirmar Eliminación
+    </button>
+    <a class="btn btn-secondary" href="@Url.Action("Index")">
+        <i class="fas fa-arrow-left"></i> Cancelar
+    </a>
+</form>

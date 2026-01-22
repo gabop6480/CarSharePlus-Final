@@ -1,0 +1,61 @@
+﻿@{
+    ViewData["Title"] = "Iniciar sesión";
+}
+
+<h2 class="text-center fw-bold" style="color: goldenrod;">
+    <i class="fas fa-sign-in-alt"></i> Iniciar sesión
+</h2>
+
+<!-- Mensajes de error -->
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger text-center mt-3">
+        <i class="fas fa-exclamation-triangle"></i> @TempData["ErrorMessage"]
+    </div>
+}
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success text-center mt-3">
+        <i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]
+    </div>
+}
+
+<form asp-action="Login" method="post" class="mt-4">
+    <!-- Correo -->
+    <div class="mb-3">
+        <label for="correo" class="form-label fw-bold">Correo</label>
+        <input type="email" name="correo" class="form-control" placeholder="Ej. usuario@correo.com" required />
+    </div>
+
+    <!-- Contraseña -->
+    <div class="mb-3">
+        <label for="password" class="form-label fw-bold">Contraseña</label>
+        <input type="password" name="password" class="form-control" placeholder="Ingrese su contraseña" required />
+    </div>
+
+    <!-- Botón -->
+    <div class="text-center mt-4">
+        <button type="submit" class="btn btn-warning fw-bold">
+            <i class="fas fa-sign-in-alt"></i> Ingresar
+        </button>
+    </div>
+
+    <!-- Link para crear cuenta -->
+    <div class="text-center mt-3">
+        <p class="fw-bold">
+            ¿No tienes cuenta?
+            <a asp-controller="Account" asp-action="Register" class="text-decoration-none" style="color: goldenrod;">
+                Crear una cuenta
+            </a>
+        </p>
+    </div>
+
+    <a asp-controller="Account" asp-action="ForgotPassword">¿Olvidaste tu contraseña?</a>
+
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

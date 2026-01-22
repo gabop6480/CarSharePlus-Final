@@ -1,0 +1,106 @@
+﻿@model IEnumerable<CarSharePlusShared.ViewModels.VehiculoViewModel>
+@using System.Globalization
+
+@{
+    ViewData["Title"] = "Mis Vehículos";
+}
+
+<h2 class="text-center fw-bold" style="color: goldenrod;">
+    <i class="fas fa-car-side"></i> Mis Vehículos
+</h2>
+
+<div class="text-center mt-3">
+    <a asp-controller="Vehiculos" asp-action="Create" class="btn btn-warning fw-bold">
+        <i class="fas fa-plus-circle"></i> Agregar vehículo
+    </a>
+</div>
+
+@if (Model != null && Model.Any())
+{
+    <table class="table table-bordered table-hover mt-4">
+        <thead class="table-warning text-center">
+            <tr>
+                <th>Marca</th>
+                <th>Modelo</th>
+                <th>Placa</th>
+                <th>Año</th>
+                <th>Transmisión</th>
+                <th>Energía</th>
+                <th>Estado</th>
+                <th>Tarifa / Hora</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+
+        <tbody class="text-center">
+            @foreach (var v in Model)
+            {
+                <tr>
+                    <td>@v.Marca</td>
+                    <td>@v.Modelo</td>
+                    <td><strong>@v.Placa</strong></td>
+                    <td>@v.Anio</td>
+                    <td>@v.Transmision</td>
+                    <td>@v.Energia</td>
+
+                    <!-- ESTADO CLARO -->
+                    <td>
+                        @if (v.Disponible)
+                        {
+                            <span class="badge bg-success">
+                                <i class="fas fa-check-circle"></i> Libre
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">
+                                <i class="fas fa-lock"></i> En reserva
+                            </span>
+                        }
+                    </td>
+
+                    <!-- MONEDA ECUADOR -->
+                    <td>
+                        @v.TarifaPorHora.ToString("C2",
+                        CultureInfo.GetCultureInfo("es-EC"))
+            </td>
+
+            <td>
+                <a asp-action="Details" asp-route-id="@v.Id"
+                   class="btn btn-sm btn-outline-warning">
+                    <i class="fas fa-eye"></i>
+                </a>
+
+                <a asp-action="Edit" asp-route-id="@v.Id"
+                   class="btn btn-sm btn-outline-primary">
+                    <i class="fas fa-edit"></i>
+                </a>
+
+                <a asp-action="Delete" asp-route-id="@v.Id"
+                   class="btn btn-sm btn-outline-danger">
+                    <i class="fas fa-trash"></i>
+                </a>
+
+                <!-- 🚀 RESERVAR DIRECTO -->
+                @if (v.Disponible)
+                        {
+                            <a asp-controller="Reservas"
+                               asp-action="Create"
+                               asp-route-vehiculoId="@v.Id"
+                               class="btn btn-sm btn-success">
+                                <i class="fas fa-calendar"></i>
+                            </a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-info text-center mt-4">
+        <i class="fas fa-info-circle"></i>
+        🚗 No tienes vehículos registrados aún.
+    </div>
+}

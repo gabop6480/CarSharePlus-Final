@@ -1,0 +1,163 @@
+﻿@using CarSharePlusShared.Models
+@model CarSharePlusShared.ViewModels.ReservaViewModel
+
+@{
+    ViewData["Title"] = "Editar Reserva";
+}
+
+<h2>Editar Reserva</h2>
+
+<form asp-action="Edit" method="post">
+    @Html.AntiForgeryToken()
+
+    <input type="hidden" asp-for="Id" />
+
+    <!-- 👤 USUARIO BLOQUEADO -->
+    <div class="form-group mb-3">
+        <label>Usuario</label>
+        <input class="form-control" type="text" value="@Model.UsuarioNombre" disabled />
+        <input type="hidden" asp-for="UsuarioId" />
+    </div>
+
+    <!-- 🚗 VEHÍCULO -->
+    <div class="form-group mb-3">
+        <label>Vehículo</label>
+        <select asp-for="VehiculoId"
+                asp-items="ViewBag.Vehiculos"
+                class="form-control"
+                id="vehiculoDropdown">
+            <option value="">Seleccione un vehículo</option>
+        </select>
+        <span asp-validation-for="VehiculoId" class="text-danger"></span>
+    </div>
+
+    <div id="vehiculoDetalles"
+         class="alert alert-info mt-2"
+         style="display:none;">
+    </div>
+
+    <!-- 📅 FECHAS -->
+    <div class="form-group mb-3">
+        <label>Fecha Inicio</label>
+        <input asp-for="FechaInicio"
+               class="form-control"
+               type="datetime-local"
+               id="fechaInicio"
+               value="@Model.FechaInicio.ToString("yyyy-MM-ddTHH:mm")" />
+    </div>
+
+    <div class="form-group mb-3">
+        <label>Fecha Fin</label>
+        <input asp-for="FechaFin"
+               class="form-control"
+               type="datetime-local"
+               id="fechaFin"
+               value="@Model.FechaFin.ToString("yyyy-MM-ddTHH:mm")" />
+    </div>
+
+    <!-- 📍 UBICACIONES -->
+    <div class="form-group mb-3">
+        <label>Ubicación Inicio</label>
+        <input asp-for="UbicacionInicio" class="form-control" />
+    </div>
+
+    <div class="form-group mb-3">
+        <label>Ubicación Fin</label>
+        <input asp-for="UbicacionFin" class="form-control" />
+    </div>
+
+    <!-- 📌 ESTADO -->
+    <div class="form-group mb-3">
+        <label>Estado</label>
+        <select asp-for="Estado"
+                asp-items="Html.GetEnumSelectList<EstadoReserva>()"
+                class="form-control">
+        </select>
+    </div>
+
+    <!-- 💵 MONTO (SOLO VISUAL) -->
+    <div class="form-group mb-3">
+        <label>Monto a Pagar</label>
+        <p class="form-control-plaintext fw-bold">
+            @Model.MontoMostrar.ToString("C")
+        </p>
+    </div>
+
+    <div class="alert alert-warning mt-2" id="multaAviso" style="display:none;">
+        ⚠️ Si cambias fechas o vehículo, el monto será recalculado al guardar.
+    </div>
+
+    <button type="submit" class="btn btn-success">
+        Guardar Cambios
+    </button>
+
+    <a asp-action="MisReservas" class="btn btn-secondary">
+        Cancelar
+    </a>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(document).ready(function () {
+
+            let tarifaHora = 0;
+
+            function obtenerTarifaVehiculo(id) {
+                if (!id) return;
+
+                $.getJSON('/Reservas/InfoVehiculo?id=' + id, function (data) {
+                    tarifaHora = Number(data.tarifaPorHora) || 0;
+
+                    $('#vehiculoDetalles').html(`
+                        <strong>Marca:</strong> ${data.marca}<br/>
+                        <strong>Modelo:</strong> ${data.modelo}<br/>
+                        <strong>Placa:</strong> ${data.placa}<br/>
+                        <strong>Tarifa por hora:</strong> $${data.tarifaPorHora}
+                    `).show();
+
+                    calcularMontoVisual();
+                });
+            }
+
+            function calcularMontoVisual() {
+                let inicioVal = $('#fechaInicio').val();
+                let finVal = $('#fechaFin').val();
+
+                if (!inicioVal || !finVal || tarifaHora <= 0) return;
+
+                let inicio = new Date(inicioVal);
+                let fin = new Date(finVal);
+
+                if (fin <= inicio) return;
+
+                let horas = (fin - inicio) / 36e5;
+
+                let monto = horas * tarifaHora;
+
+                // Solo para mostrar, no se envía al servidor
+                $('#montoPagoVisual').text('$' + monto.toFixed(2));
+
+                $('#multaAviso').show();
+            }
+
+            // Cargar vehículo inicial
+            let vehiculoInicial = $('#vehiculoDropdown').val();
+            if (vehiculoInicial) {
+                obtenerTarifaVehiculo(vehiculoInicial);
+            }
+
+            $('#vehiculoDropdown').change(function () {
+                obtenerTarifaVehiculo($(this).val());
+            });
+
+            $('#fechaInicio, #fechaFin').change(function () {
+                calcularMontoVisual();
+            });
+
+        });
+    </script>
+}

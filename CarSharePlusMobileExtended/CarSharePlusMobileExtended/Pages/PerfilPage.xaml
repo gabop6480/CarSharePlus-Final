@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CarSharePlusMobileExtended.Pages.PerfilPage"
+             Title="Mi Perfil">
+
+    <VerticalStackLayout Padding="20" Spacing="10">
+        <Label Text="Mi Perfil" FontSize="24" FontAttributes="Bold" HorizontalOptions="Center" />
+
+        <!-- Datos del usuario -->
+        <Label Text="{Binding Usuario.Nombre}" FontSize="18" />
+        <Label Text="{Binding Usuario.Correo}" FontSize="16" />
+        <Label Text="{Binding Usuario.Telefono}" FontSize="16" />
+
+        <!-- Datos del vehículo -->
+        <Label Text="Vehículo Asignado" FontSize="20" FontAttributes="Bold" Margin="0,20,0,0"/>
+        <Label Text="{Binding Vehiculo.Placa, StringFormat='Placa: {0}'}" />
+        <Label Text="{Binding Vehiculo.Transmision, StringFormat='Transmisión: {0}'}" />
+        <Label Text="{Binding Vehiculo.Energia, StringFormat='Energía: {0}'}" />
+        <Label Text="{Binding Vehiculo.AutonomiaKm, StringFormat='Autonomía: {0} km'}" />
+        <Label Text="{Binding Vehiculo.ConsumoPorKm, StringFormat='Consumo: {0} L/km'}" />
+
+        <!-- Botones que usan el mismo comando con parámetros distintos -->
+        <Button Text="Solicitar Edición"
+                Command="{Binding EnviarSolicitudCommand}"
+                CommandParameter="Edición"
+                BackgroundColor="#34C759"
+                TextColor="White"
+                CornerRadius="8" />
+
+        <Button Text="Solicitar Eliminación"
+                Command="{Binding EnviarSolicitudCommand}"
+                CommandParameter="Eliminación"
+                BackgroundColor="Red"
+                TextColor="White"
+                CornerRadius="8" />
+    </VerticalStackLayout>
+</ContentPage>

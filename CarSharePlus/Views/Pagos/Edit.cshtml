@@ -1,0 +1,51 @@
+﻿@model CarSharePlusShared.Models.Pago
+
+@{
+    ViewData["Title"] = "Editar Pago";
+}
+
+<h2>Editar Pago</h2>
+
+<form asp-action="Edit">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="form-group mb-3">
+        <label>Reserva Asociada</label>
+        <input class="form-control" value="@Model.Reserva?.Usuario?.Nombre - @Model.Reserva?.Vehiculo?.Placa" readonly />
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Monto" class="form-label"></label>
+        <input asp-for="Monto" class="form-control" />
+        <span asp-validation-for="Monto" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Metodo" class="form-label"></label>
+        <select asp-for="Metodo" class="form-select">
+            <option value="Tarjeta">Tarjeta</option>
+            <option value="Efectivo">Efectivo</option>
+            <option value="Transferencia">Transferencia</option>
+        </select>
+        <span asp-validation-for="Metodo" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="FechaPago" class="form-label"></label>
+        <input asp-for="FechaPago" class="form-control" type="datetime-local" readonly />
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Confirmado" class="form-label"></label>
+        <input asp-for="Confirmado" type="checkbox" disabled />
+    </div>
+
+    <button type="submit" class="btn btn-success">Guardar Cambios</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

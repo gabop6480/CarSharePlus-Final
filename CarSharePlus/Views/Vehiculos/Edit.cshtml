@@ -1,0 +1,153 @@
+﻿@model CarSharePlusShared.ViewModels.VehiculoViewModel
+@using CarSharePlusShared.Models
+
+@{
+    ViewData["Title"] = "Editar Vehículo";
+}
+
+<h2>Editar Vehículo</h2>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        <i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        <i class="fas fa-exclamation-triangle"></i> @TempData["ErrorMessage"]
+    </div>
+}
+
+<div class="alert alert-info">
+    <i class="fas fa-info-circle"></i>
+    <strong>Información:</strong>
+    Solo puedes modificar los datos del vehículo.
+    El usuario propietario no puede cambiarse.
+</div>
+
+<div class="card mb-3">
+    <div class="card-body">
+
+        <form asp-action="Edit">
+
+            <input type="hidden" asp-for="Id" />
+
+            <!-- 🔐 USUARIO SOLO LECTURA -->
+            <div class="form-group">
+                <label>Propietario</label>
+
+                @if (!string.IsNullOrEmpty(Model.UsuarioNombre))
+                {
+                    <div class="alert alert-secondary">
+                        👤 @Model.UsuarioNombre
+                        <br />
+                        ✉ @Model.UsuarioCorreo
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-warning">
+                        Vehículo sin propietario
+                    </div>
+                }
+
+                <!-- Se mantiene oculto para el binding -->
+                <input type="hidden" asp-for="UsuarioId" />
+            </div>
+
+
+            <!-- ========== DATOS BÁSICOS ========== -->
+
+            <div class="form-group">
+                <label asp-for="Marca"></label>
+                <input asp-for="Marca" class="form-control" />
+                <span asp-validation-for="Marca" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Modelo"></label>
+                <input asp-for="Modelo" class="form-control" />
+                <span asp-validation-for="Modelo" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Anio"></label>
+                <input asp-for="Anio" class="form-control" type="number" />
+                <span asp-validation-for="Anio" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Placa"></label>
+                <input asp-for="Placa" class="form-control" />
+                <span asp-validation-for="Placa" class="text-danger"></span>
+            </div>
+
+
+            <!-- ========== CARACTERÍSTICAS ========== -->
+
+            <div class="form-group">
+                <label asp-for="Transmision"></label>
+                <select asp-for="Transmision"
+                        class="form-control"
+                        asp-items="Html.GetEnumSelectList<TipoTransmision>()">
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Energia"></label>
+                <select asp-for="Energia"
+                        class="form-control"
+                        asp-items="Html.GetEnumSelectList<TipoEnergia>()">
+                </select>
+            </div>
+
+            <div class="form-group form-check">
+                <input asp-for="Disponible" class="form-check-input" />
+                <label asp-for="Disponible" class="form-check-label"></label>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="AutonomiaKm"></label>
+                <input asp-for="AutonomiaKm" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ConsumoPorKm"></label>
+                <input asp-for="ConsumoPorKm" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="TarifaPorHora"></label>
+                <input asp-for="TarifaPorHora" class="form-control" />
+            </div>
+
+
+            <!-- ========== BOTONES ========== -->
+
+            <button type="submit" class="btn btn-primary">
+                💾 Actualizar
+            </button>
+
+            <a class="btn btn-secondary"
+               href="@Url.Action("MisVehiculos")">
+                ← Volver a mis vehículos
+            </a>
+
+            <a class="btn btn-info"
+               href="@Url.Action("Details", new { id = Model.Id })">
+                🔎 Detalles
+            </a>
+
+        </form>
+
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

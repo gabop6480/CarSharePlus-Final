@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CarSharePlusMobileExtended.Pages.EvaluacionesPage"
+             x:Name="EvaluacionesPageRoot"
+             Title="Mis Evaluaciones">
+
+    <VerticalStackLayout Padding="20">
+        <Label Text="Mis Evaluaciones" FontSize="24" FontAttributes="Bold" />
+
+        <CollectionView ItemsSource="{Binding Evaluaciones}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame BorderColor="LightGray" Margin="5" Padding="10">
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="{Binding VehiculoId, StringFormat='Vehículo: {0}'}" />
+                            <Label Text="{Binding Calificacion, StringFormat='Calificación: {0}'}" />
+                            <Label Text="{Binding Comentario, StringFormat='Comentario: {0}'}" />
+                            <Label Text="{Binding Fecha, StringFormat='Fecha: {0:dd/MM/yyyy}'}" />
+
+                            <Button Text="Editar"
+                                    Command="{Binding Source={x:Reference EvaluacionesPageRoot}, Path=BindingContext.EditarEvaluacionCommand}"
+                                    CommandParameter="{Binding .}" />
+
+                            <Button Text="Solicitar Eliminación"
+                                    Command="{Binding Source={x:Reference EvaluacionesPageRoot}, Path=BindingContext.SolicitarEliminacionCommand}"
+                                    CommandParameter="{Binding .}"
+                                    BackgroundColor="Red"
+                                    TextColor="White" />
+                        </VerticalStackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <Button Text="Agregar Evaluación"
+                Command="{Binding AgregarEvaluacionCommand}"
+                Margin="0,20,0,0" />
+    </VerticalStackLayout>
+</ContentPage>

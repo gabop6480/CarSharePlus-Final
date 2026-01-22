@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="CarSharePlusMobileExtended.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:CarSharePlusMobileExtended"
+    xmlns:pages="clr-namespace:CarSharePlusMobileExtended.Pages"
+    Title="CarSharePlus">
+
+    <!-- TabBar principal -->
+    <TabBar>
+        <ShellContent
+            Title="🏠 Inicio"
+            ContentTemplate="{DataTemplate local:MainPage}"
+            Route="home" />
+
+        <ShellContent
+            Title="📊 Dashboard"
+            ContentTemplate="{DataTemplate pages:DashboardPage}"
+            Route="dashboard" />
+
+        <ShellContent
+            Title="🗺️ Mapas"
+            ContentTemplate="{DataTemplate pages:MapasPage}"
+            Route="mapas" />
+
+        <ShellContent
+            Title="📝 Evaluaciones"
+            ContentTemplate="{DataTemplate pages:EvaluacionesPage}"
+            Route="evaluaciones" />
+
+        <ShellContent
+            Title="💳 Pagos"
+            ContentTemplate="{DataTemplate pages:PagosPage}"
+            Route="pagos" />
+
+        <ShellContent
+            Title="👤 Perfil"
+            ContentTemplate="{DataTemplate pages:PerfilPage}"
+            Route="perfil" />
+
+        <ShellContent
+            Title="🚗 Reservas"
+            ContentTemplate="{DataTemplate pages:ReservasPage}"
+            Route="reservas" />
+
+        <ShellContent
+            Title="⭐ Recomendaciones"
+            ContentTemplate="{DataTemplate pages:RecomendacionesPage}"
+            Route="recomendaciones" />
+    </TabBar>
+</Shell>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CarSharePlusMobileExtended.Pages.PagosPage"
+             Title="Pagos">
+
+    <VerticalStackLayout Padding="20" Spacing="15">
+        <Label Text="💳 Pagos registrados"
+               FontSize="24"
+               FontAttributes="Bold"
+               HorizontalOptions="Center"
+               TextColor="#007AFF" />
+
+        <!-- Lista de pagos -->
+        <CollectionView ItemsSource="{Binding Pagos}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame BorderColor="LightGray" Margin="5" Padding="10">
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="{Binding Id, StringFormat='Pago #{0}'}" FontAttributes="Bold"/>
+                            <Label Text="{Binding FechaPago, StringFormat='Fecha: {0:dd/MM/yyyy HH:mm}'}"/>
+                            <Label Text="{Binding Monto, StringFormat='Monto: ${0:F2}'}"/>
+                            <Label Text="{Binding Metodo}" />
+                        </VerticalStackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Botón para registrar -->
+        <Button Text="Registrar nuevo pago"
+                Command="{Binding RegistrarCommand}"
+                BackgroundColor="#34C759"
+                TextColor="White"
+                CornerRadius="8"
+                Margin="0,20,0,0"/>
+    </VerticalStackLayout>
+</ContentPage>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CarSharePlusMobileExtended.Pages.RecomendacionesPage"
+             Title="Vehículos Recomendados">
+
+    <VerticalStackLayout Padding="20" Spacing="15">
+        <Label Text="Vehículos Recomendados"
+               FontSize="24"
+               FontAttributes="Bold"
+               HorizontalOptions="Center" />
+
+        <!-- Botón para cargar datos -->
+        <Button Text="Cargar recomendaciones"
+                Command="{Binding CargarRecomendacionesCommand}"
+                BackgroundColor="#007AFF"
+                TextColor="White"
+                CornerRadius="8"
+                Margin="0,10,0,20" />
+
+        <CollectionView ItemsSource="{Binding VehiculosRecomendados}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame BorderColor="LightGray" Margin="5" Padding="10">
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="{Binding Placa}" FontAttributes="Bold" />
+                            <Label Text="{Binding Promedio, StringFormat='Promedio: {0:F1}'}" />
+                            <Label Text="{Binding Transmision, StringFormat='Transmisión: {0}'}" />
+                            <Label Text="{Binding TipoEnergia, StringFormat='Energía: {0}'}" />
+                            <Label Text="{Binding Autonomia, StringFormat='Autonomía: {0} km'}" />
+                            <Label Text="{Binding Consumo, StringFormat='Consumo: {0} L/100km'}" />
+                        </VerticalStackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </VerticalStackLayout>
+</ContentPage>

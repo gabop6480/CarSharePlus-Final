@@ -1,0 +1,62 @@
+﻿@model CarSharePlusShared.Models.Usuario
+@{
+    ViewData["Title"] = "Crear cuenta";
+}
+
+<h2 class="text-center fw-bold" style="color: goldenrod;">
+    <i class="fas fa-user-plus"></i> Crear cuenta
+</h2>
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger text-center mt-3">
+        <i class="fas fa-exclamation-triangle"></i> Corrige los errores antes de continuar
+    </div>
+}
+
+<form asp-action="Register" method="post" class="mt-4">
+    <div class="mb-3">
+        <label asp-for="Nombre" class="form-label fw-bold"></label>
+        <input asp-for="Nombre" class="form-control" placeholder="Ej. Juan Pérez" />
+        <span asp-validation-for="Nombre" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Correo" class="form-label fw-bold"></label>
+        <input asp-for="Correo" class="form-control" placeholder="Ej. usuario@correo.com" />
+        <span asp-validation-for="Correo" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Password" class="form-label fw-bold"></label>
+        <input asp-for="Password" type="password" class="form-control" placeholder="Ingrese su contraseña" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Telefono" class="form-label fw-bold"></label>
+        <input asp-for="Telefono" class="form-control" placeholder="Ej. 0991234567" />
+        <span asp-validation-for="Telefono" class="text-danger"></span>
+    </div>
+
+    <div class="text-center mt-4">
+        <button type="submit" class="btn btn-warning fw-bold">
+            <i class="fas fa-user-plus"></i> Registrarse
+        </button>
+    </div>
+</form>
+
+<div class="text-center mt-3">
+    <p class="fw-bold">
+        ¿Ya tienes cuenta?
+        <a asp-controller="Account" asp-action="Login" class="text-decoration-none" style="color: goldenrod;">
+            Iniciar sesión
+        </a>
+    </p>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

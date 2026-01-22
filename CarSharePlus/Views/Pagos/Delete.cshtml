@@ -1,0 +1,46 @@
+﻿@model CarSharePlusShared.Models.Pago
+
+@{
+    ViewData["Title"] = "Eliminar Pago";
+}
+
+<h2>Eliminar Pago</h2>
+<hr />
+
+<h4>¿Seguro que deseas eliminar este pago?</h4>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <p><strong>Reserva:</strong> @Model.Reserva?.Usuario?.Nombre - @Model.Reserva?.Vehiculo?.Placa</p>
+        <p><strong>Monto:</strong> @Model.Monto.ToString("C")</p>
+        <p><strong>Fecha:</strong> @Model.FechaPago.ToString("dd/MM/yyyy HH:mm")</p>
+        <p><strong>Método:</strong> @Model.Metodo</p>
+        <p>
+            <strong>Confirmado:</strong>
+            @if (Model.Confirmado)
+            {
+                <span class="badge bg-success">Sí</span>
+            }
+            else
+            {
+                <span class="badge bg-danger">No</span>
+            }
+        </p>
+    </div>
+</div>
+
+<form asp-action="Delete">
+    <input type="hidden" asp-for="Id" />
+    @if (Model.Confirmado)
+    {
+        <div class="alert alert-warning">
+            Este pago está confirmado y no puede ser eliminado.
+        </div>
+        <button type="submit" class="btn btn-danger" disabled>Eliminar</button>
+    }
+    else
+    {
+        <button type="submit" class="btn btn-danger">Eliminar</button>
+    }
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>

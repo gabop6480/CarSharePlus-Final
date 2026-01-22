@@ -1,0 +1,67 @@
+﻿@model CarSharePlusShared.Models.Usuario
+
+@{
+    ViewData["Title"] = "Eliminar Usuario";
+}
+
+<h2 class="text-danger">¿Eliminar este Usuario?</h2>
+
+<div class="alert alert-warning">
+    <i class="fas fa-exclamation-triangle"></i>
+    <strong>Atención:</strong> Esta acción eliminará al usuario y no se puede deshacer.
+</div>
+
+<div class="card border-warning mb-3">
+    <div class="card-header bg-warning text-dark">
+        <strong>@Model.Nombre</strong>
+    </div>
+    <div class="card-body">
+        <p><strong>Correo:</strong> @Model.Correo</p>
+        <p><strong>Teléfono:</strong> @Model.Telefono</p>
+        <p><strong>Vehículos asignados:</strong> @(Model.Vehiculos != null ? Model.Vehiculos.Count : 0)</p>
+
+        @if (Model.Vehiculos != null && Model.Vehiculos.Any())
+        {
+            <ul>
+                @foreach (var v in Model.Vehiculos)
+                {
+                    <li><i class="fas fa-car text-info"></i> @v.Placa - @v.Marca @v.Modelo</li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p><em>No tiene vehículos asignados</em></p>
+        }
+    </div>
+</div>
+
+@if (Model.Vehiculos != null && Model.Vehiculos.Any())
+{
+    <div class="alert alert-danger">
+        <i class="fas fa-ban"></i>
+        <strong>No se puede eliminar:</strong> Este usuario tiene vehículos asignados.
+        Primero reasigne o elimine esos vehículos.
+    </div>
+
+    <a asp-action="Index" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Volver
+    </a>
+}
+else
+{
+    <div class="alert alert-danger">
+        <i class="fas fa-trash"></i>
+        <strong>Confirmación:</strong> Si continúas, el usuario será eliminado definitivamente.
+    </div>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger">
+            <i class="fas fa-trash"></i> Eliminar
+        </button>
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Cancelar
+        </a>
+    </form>
+}

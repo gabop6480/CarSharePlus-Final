@@ -1,0 +1,80 @@
+﻿@model IEnumerable<CarSharePlusShared.ViewModels.ReservaViewModel>
+
+@{
+    ViewData["Title"] = "Reservas";
+}
+
+<h2>@ViewData["Title"]</h2>
+<hr />
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+<table class="table table-striped table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>Usuario</th>
+            <th>Vehículo</th>
+            <th>Fechas</th>
+            <th>Ubicación Inicio</th>
+            <th>Ubicación Fin</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Any())
+        {
+            <tr>
+                <td colspan="7" class="text-center text-muted">No hay reservas registradas.</td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var reserva in Model)
+            {
+                <tr>
+                    <td>@reserva.UsuarioNombre</td>
+                    <td>@reserva.VehiculoPlaca</td>
+                    <td>@reserva.FechaInicio.ToString("dd/MM/yyyy HH:mm") - @reserva.FechaFin.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td>@reserva.UbicacionInicio</td>
+                    <td>@reserva.UbicacionFin</td>
+                    <td>
+                        @switch (reserva.Estado)
+                        {
+                            case CarSharePlusShared.Models.EstadoReserva.Pendiente:
+                                <span class="badge bg-warning">Pendiente</span>
+                                break;
+                            case CarSharePlusShared.Models.EstadoReserva.Activa:
+                                <span class="badge bg-success">Activa</span>
+                                break;
+                            case CarSharePlusShared.Models.EstadoReserva.Finalizada:
+                                <span class="badge bg-secondary">Finalizada</span>
+                                break;
+                            case CarSharePlusShared.Models.EstadoReserva.Cancelada:
+                                <span class="badge bg-danger">Cancelada</span>
+                                break;
+                        }
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@reserva.Id" class="btn btn-sm btn-warning">Editar</a>
+                        <a asp-action="Delete" asp-route-id="@reserva.Id" class="btn btn-sm btn-danger">Eliminar</a>
+                        <a asp-action="Details" asp-route-id="@reserva.Id" class="btn btn-sm btn-info">Detalles</a>
+                        <!-- El botón de Registrar Pago si quieres puedes quitarlo o usar reserva.MontoPago para validar -->
+                        <a asp-controller="Pagos" asp-action="Create" asp-route-reservaId="@reserva.Id" class="btn btn-sm btn-primary">Registrar Pago</a>
+                    </td>
+                </tr>
+            }
+
+            }
+        }
+    </tbody>
+</table>
+
+<a asp-action="Create" class="btn btn-primary">Nueva Reserva</a>

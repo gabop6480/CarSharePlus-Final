@@ -1,0 +1,143 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - CarSharePlus</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/CarSharePlus.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+    <header>
+        <!-- Navbar dorado -->
+        <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #fff8e1; border-bottom: 2px solid goldenrod;">
+            <div class="container-fluid">
+                <a class="navbar-brand fw-bold" asp-controller="Home" asp-action="Index" style="color: goldenrod;">
+                    <i class="fas fa-car"></i> CarSharePlus
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+
+                        <!-- Menú común -->
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Index" style="color: goldenrod;">
+                                <i class="fas fa-home"></i> Home
+                            </a>
+                        </li>
+
+                        <!-- Menú dinámico según rol -->
+                        @if (User.Identity?.IsAuthenticated ?? false)
+                        {
+                            if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Usuarios" asp-action="Index" style="color: goldenrod;">
+                                        <i class="fas fa-users"></i> Usuarios
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Vehiculos" asp-action="Index" style="color: goldenrod;">
+                                        <i class="fas fa-car-side"></i> Vehículos
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Reservas" asp-action="Index" style="color: goldenrod;">
+                                        <i class="fas fa-calendar-check"></i> Reservas
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Pagos" asp-action="Index" style="color: goldenrod;">
+                                        <i class="fas fa-credit-card"></i> Pagos
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Vehiculos" asp-action="MisVehiculos" style="color: goldenrod;">
+                                        <i class="fas fa-car-side"></i> Mis Vehículos
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Reservas" asp-action="MisReservas" style="color: goldenrod;">
+                                        <i class="fas fa-calendar-check"></i> Mis Reservas
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Pagos" asp-action="MisPagos" style="color: goldenrod;">
+                                        <i class="fas fa-credit-card"></i> Mis Pagos
+                                    </a>
+                                </li>
+                            }
+
+                            <!-- Usuario autenticado -->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle fw-bold" href="#" id="userMenu" role="button" data-bs-toggle="dropdown" style="color: goldenrod;">
+                                    <i class="fas fa-user-circle"></i> @User.Identity.Name
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" asp-controller="Account" asp-action="Logout"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <!-- Usuario no autenticado -->
+                            <li class="nav-item">
+                                <a class="nav-link fw-bold" asp-controller="Account" asp-action="Login" style="color: goldenrod;">
+                                    <i class="fas fa-sign-in-alt"></i> Iniciar sesión
+                                </a>
+                            </li>
+                        }
+
+                        <!-- Privacy siempre visible -->
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Privacy" style="color: goldenrod;">
+                                <i class="fas fa-shield-alt"></i> Privacy
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Contenido principal -->
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+
+            <!-- Mensajes de confirmación -->
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success text-center mt-3">
+                    <i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]
+                </div>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger text-center mt-3">
+                    <i class="fas fa-exclamation-triangle"></i> @TempData["ErrorMessage"]
+                </div>
+            }
+        </main>
+    </div>
+
+    <!-- Footer dorado -->
+    <footer class="border-top text-center py-3" style="background-color: #fff8e1; color: goldenrod;">
+        <div class="container">
+            &copy; 2026 - CarSharePlus | <a asp-controller="Home" asp-action="Privacy" style="color: goldenrod;">Privacy</a> | v1.0
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

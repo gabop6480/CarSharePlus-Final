@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CarSharePlusMobileExtended.Pages.EditarEvaluacionPage"
+             Title="Editar Evaluación">
+
+    <VerticalStackLayout Padding="20" Spacing="10">
+        <Label Text="Editar Evaluación" FontSize="24" FontAttributes="Bold" HorizontalOptions="Center" />
+
+        <Label Text="Vehículo ID" />
+        <Entry Text="{Binding VehiculoId}" Keyboard="Numeric" IsEnabled="False" />
+
+        <Label Text="Calificación (1-5)" />
+        <Entry Text="{Binding Calificacion}" Keyboard="Numeric" />
+
+        <Label Text="Comentario" />
+        <Editor Text="{Binding Comentario}" HeightRequest="100" />
+
+        <Button Text="Actualizar Evaluación"
+                Command="{Binding ActualizarEvaluacionCommand}"
+                Margin="0,20,0,0"
+                BackgroundColor="#007AFF"
+                TextColor="White"
+                CornerRadius="8" />
+    </VerticalStackLayout>
+</ContentPage>

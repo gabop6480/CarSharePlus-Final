@@ -1,0 +1,31 @@
+﻿@model CarSharePlusShared.ViewModels.ReservaViewModel
+
+@{
+    ViewData["Title"] = "Eliminar Reserva";
+
+    var horas = (Model.FechaFin - Model.FechaInicio).TotalHours;
+    var montoBase = (decimal)horas * Model.TarifaPorHora;
+}
+
+<h2>Eliminar Reserva</h2>
+<h4>¿Seguro que deseas eliminar esta reserva?</h4>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <p><strong>Usuario:</strong> @Model.UsuarioNombre</p>
+        <p><strong>Vehículo:</strong> @Model.VehiculoPlaca</p>
+        <p><strong>Fechas:</strong> @Model.FechaInicio:dd/MM/yyyy HH:mm - @Model.FechaFin:dd/MM/yyyy HH:mm</p>
+        <p><strong>Ubicación Inicio:</strong> @Model.UbicacionInicio</p>
+        <p><strong>Ubicación Fin:</strong> @Model.UbicacionFin</p>
+        <p><strong>Estado:</strong> @Model.Estado</p>
+        <p><strong>Monto Base:</strong> @montoBase.ToString("C") (por @horas.ToString("0.##") horas)</p>
+        <p><strong>Monto Final:</strong> @Model.MontoMostrar.ToString("C")</p>
+    </div>
+</div>
+
+<form asp-action="Delete" method="post">
+    @Html.AntiForgeryToken()
+    <input asp-for="Id" type="hidden" />
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+    <a asp-action="MisReservas" class="btn btn-secondary">Cancelar</a>
+</form>

@@ -1,0 +1,75 @@
+﻿@model CarSharePlusShared.Models.Usuario
+
+@{
+    ViewData["Title"] = "Editar Usuario";
+}
+
+<h2>Editar Usuario</h2>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        <i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]
+    </div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        <i class="fas fa-exclamation-triangle"></i> @TempData["ErrorMessage"]
+    </div>
+}
+
+<div class="alert alert-info">
+    <i class="fas fa-info-circle"></i>
+    <strong>Información:</strong> Modifique los datos del usuario y guarde los cambios.
+</div>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <form asp-action="Edit">
+            <input type="hidden" asp-for="Id" />
+
+            <div class="form-group">
+                <label asp-for="Nombre" class="control-label"></label>
+                <input asp-for="Nombre" class="form-control" placeholder="Ej. Juan Pérez" />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Correo" class="control-label"></label>
+                <input asp-for="Correo" class="form-control" type="email" placeholder="Ej. usuario@correo.com" />
+                <span asp-validation-for="Correo" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Telefono" class="control-label"></label>
+                <input asp-for="Telefono" class="form-control" type="tel" placeholder="Ej. +593987654321" />
+                <span asp-validation-for="Telefono" class="text-danger"></span>
+            </div>
+
+            <!-- Dropdown para asignar vehículo -->
+            <div class="form-group">
+                <label for="VehiculoId">Asignar Vehículo</label>
+                <select id="VehiculoId" name="VehiculoId" class="form-control" asp-items="ViewBag.VehiculoId">
+                    <option value="">-- Seleccione un vehículo disponible --</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Guardar
+            </button>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Volver
+            </a>
+            <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-info">
+                <i class="fas fa-info-circle"></i> Detalles
+            </a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

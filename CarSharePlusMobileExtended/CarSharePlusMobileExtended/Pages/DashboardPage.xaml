@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:microcharts="clr-namespace:Microcharts.Maui;assembly=Microcharts.Maui"
+             x:Class="CarSharePlusMobileExtended.Pages.DashboardPage"
+             Title="Dashboard"
+             BackgroundColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource OffBlack}}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+
+            <!-- Encabezado -->
+            <Label Text="📊 Estadísticas de Reservas"
+                   Style="{StaticResource Headline}" />
+
+            <!-- Tarjeta con sombra -->
+            <Frame CornerRadius="12"
+                   HasShadow="True"
+                   BackgroundColor="{AppThemeBinding Light={StaticResource PrimaryLight}, Dark={StaticResource OffBlack}}"
+                   Padding="20">
+
+                <VerticalStackLayout Spacing="10">
+
+                    <Label Text="{Binding TotalReservas, StringFormat='Total: {0}'}"
+                           TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+
+                    <Label Text="{Binding Activas, StringFormat='Activas: {0}'}"
+                           TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+
+                    <Label Text="{Binding Finalizadas, StringFormat='Finalizadas: {0}'}"
+                           TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+
+                    <Label Text="{Binding Canceladas, StringFormat='Canceladas: {0}'}"
+                           TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+
+                    <Label Text="{Binding PromedioDuracionHoras, StringFormat='Promedio duración: {0:F1} horas'}"
+                           TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Gráfico -->
+            <Frame CornerRadius="12"
+                   HasShadow="True"
+                   BackgroundColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+                   Padding="20"
+                   HorizontalOptions="Center">
+
+                <microcharts:ChartView Chart="{Binding Chart}"
+                                       HeightRequest="250"
+                                       WidthRequest="250"
+                                       HorizontalOptions="Center"/>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

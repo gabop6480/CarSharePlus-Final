@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xaml-comp compile="true" ?>
+<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- Botones -->
+    <Style TargetType="Button">
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+        <Setter Property="FontFamily" Value="OpenSansRegular"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Padding" Value="14,10"/>
+        <Setter Property="MinimumHeightRequest" Value="44"/>
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource PrimaryDark}, Dark={StaticResource Gray600}}" />
+                            <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource White}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Pressed">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource AccentDark}, Dark={StaticResource Primary}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <!-- Labels -->
+    <Style TargetType="Label">
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+        <Setter Property="FontFamily" Value="OpenSansRegular"/>
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+
+    <!-- Headline -->
+    <Style TargetType="Label" x:Key="Headline">
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource PrimaryDark}, Dark={StaticResource White}}" />
+        <Setter Property="FontSize" Value="28"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+    </Style>
+
+    <!-- Entradas de texto -->
+    <Style TargetType="Entry">
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+        <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light={StaticResource PrimaryDark}, Dark={StaticResource White}}" />
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="FontFamily" Value="OpenSansRegular"/>
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+
+    <!-- Frames (tarjetas con sombra) -->
+    <Style TargetType="Frame">
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="HasShadow" Value="True"/>
+        <Setter Property="Padding" Value="15"/>
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource PrimaryLight}, Dark={StaticResource OffBlack}}" />
+    </Style>
+
+    <!-- Páginas -->
+    <Style TargetType="Page" ApplyToDerivedTypes="True">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Secondary}, Dark={StaticResource OffBlack}}" />
+    </Style>
+
+    <!-- Shell -->
+    <Style TargetType="Shell" ApplyToDerivedTypes="True">
+        <!-- Fondo negro -->
+        <Setter Property="Shell.BackgroundColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource OffBlack}}" />
+
+        <!-- Títulos y texto en blanco -->
+        <Setter Property="Shell.TitleColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource White}}" />
+        <Setter Property="Shell.ForegroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource White}}" />
+
+        <!-- TabBar -->
+        <Setter Property="Shell.TabBarBackgroundColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource OffBlack}}" />
+        <Setter Property="Shell.TabBarTitleColor" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}" />
+        <Setter Property="Shell.TabBarUnselectedColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource White}}" />
+    </Style>
+
+
+</ResourceDictionary>

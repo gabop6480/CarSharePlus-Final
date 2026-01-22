@@ -1,0 +1,123 @@
+﻿@model CarSharePlusShared.ViewModels.VehiculoViewModel
+@using CarSharePlusShared.Models
+
+@{
+    ViewData["Title"] = "Detalles del Vehículo";
+}
+
+<h2>Detalle del Vehículo</h2>
+
+<p><strong>Marca:</strong> @Model.Marca</p>
+<p><strong>Modelo:</strong> @Model.Modelo</p>
+<p><strong>Placa:</strong> @Model.Placa</p>
+<p><strong>Tarifa por hora:</strong> @Model.TarifaPorHora.ToString("C")</p>
+<p><strong>Dueño:</strong> @Model.UsuarioNombre</p>
+<p><strong>Disponible:</strong> @(Model.Disponible ? "Sí" : "No")</p>
+
+<div class="card mb-3">
+    <div class="card-header bg-primary text-white">
+        <strong>@Model.Marca @Model.Modelo (@Model.Placa)</strong>
+    </div>
+    <div class="card-body">
+        <!-- Datos básicos -->
+        <p><strong>Marca:</strong> @Model.Marca</p>
+        <p><strong>Modelo:</strong> @Model.Modelo</p>
+        <p><strong>Año:</strong> @Model.Anio</p>
+
+        <!-- Características técnicas -->
+        <p>
+            <strong>Transmisión:</strong>
+            @switch (Model.Transmision)
+            {
+                case TipoTransmision.Manual:
+                    {
+                        <text><i class="fas fa-cogs text-secondary"></i> Manual</text>
+                        ; break;
+                    }
+                case TipoTransmision.Automatico:
+                    {
+
+                        <text><i class="fas fa-cog text-info"></i> Automático</text>
+                        ; break;
+                    }
+            }
+        </p>
+
+        <p>
+            <strong>Tipo de Energía:</strong>
+            @switch (Model.Energia)
+            {
+                case TipoEnergia.Gasolina:
+                    {
+                        <text><i class="fas fa-gas-pump text-danger"></i> Gasolina</text>
+                        ; break;
+                    }
+                case TipoEnergia.Electrico:
+                    {
+
+                        <text><i class="fas fa-bolt text-success"></i> Eléctrico</text>
+                        ; break;
+                    }
+                case TipoEnergia.Hibrido:
+                    {
+
+                        <text><i class="fas fa-leaf text-warning"></i> Híbrido</text>
+                        ; break;
+                    }
+            }
+        </p>
+
+        <p>
+            <strong>Autonomía:</strong> 
+            @(Model.AutonomiaKm > 0 ? 
+            $"{Model.AutonomiaKm} km" : "No especificada")
+        </p>
+
+        <p>
+            <strong>Consumo por km:</strong> 
+            @(Model.ConsumoPorKm > 0 ? 
+            $"{Model.ConsumoPorKm} L/km" : "No especificado")
+        </p>
+
+
+        <!-- Estado -->
+        @if (Model.Disponible)
+        {
+            <div class="alert alert-success">
+                <i class="fas fa-check-circle"></i> Disponible
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-danger">
+                <i class="fas fa-times-circle"></i> No disponible
+            </div>
+        }
+
+        <!-- Usuario asignado -->
+        <p>
+            <strong>Usuario asignado:</strong>
+            @(string.IsNullOrEmpty(Model.UsuarioNombre)
+                        ? "No asignado"
+                        : $"{Model.UsuarioNombre} - {Model.UsuarioCorreo}")
+        </p>
+
+        @if (string.IsNullOrEmpty(Model.UsuarioNombre))
+        {
+            <div class="alert alert-warning mt-2">
+                <strong>Nota:</strong> Este vehículo no está asignado a ningún usuario.
+            </div>
+        }
+    </div>
+    <div class="card-footer">
+        <a class="btn btn-warning" href="@Url.Action("Edit", new { id = Model.Id })">
+            <i class="fas fa-edit"></i> Editar
+        </a>
+        <a class="btn btn-danger" href="@Url.Action("Delete", new { id = Model.Id })">
+            <i class="fas fa-trash"></i> Eliminar
+        </a>
+        <a class="btn btn-secondary" href="@Url.Action("MisVehiculos")">
+            <i class="fas fa-arrow-left"></i> Volver
+        </a>
+    </div>
+</div>
