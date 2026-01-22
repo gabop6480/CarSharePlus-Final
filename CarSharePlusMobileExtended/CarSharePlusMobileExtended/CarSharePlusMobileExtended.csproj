@@ -94,6 +94,9 @@
 	  <MauiXaml Update="Pages\EvaluacionesPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Pages\LoginPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Pages\MapasPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

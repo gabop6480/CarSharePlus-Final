@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:CarSharePlusShared.ViewModels;assembly=CarSharePlusShared"
+             x:Class="CarSharePlusMobileExtended.Pages.LoginPage"
+             x:DataType="vm:LoginViewModel"
+             Title="CarShare+"
+             BackgroundColor="#F3F4F6">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="25" Padding="30" VerticalOptions="Center">
+
+            <Image Source="dotnet_bot.png" 
+                   HeightRequest="120" 
+                   HorizontalOptions="Center" />
+
+            <Label Text="Bienvenido" 
+                   FontSize="28" 
+                   FontAttributes="Bold" 
+                   HorizontalOptions="Center" 
+                   TextColor="#1F2937"/>
+
+            <VerticalStackLayout Spacing="15">
+                <Entry Placeholder="Correo electrónico" 
+                       Text="{Binding Correo}" 
+                       Keyboard="Email"
+                       BackgroundColor="White"
+                       TextColor="Black"
+                       HeightRequest="50" />
+
+                <Entry Placeholder="Contraseña" 
+                       Text="{Binding Password}" 
+                       IsPassword="True"
+                       BackgroundColor="White"
+                       TextColor="Black"
+                       HeightRequest="50" />
+            </VerticalStackLayout>
+
+            <Button Text="Iniciar Sesión" 
+                    Command="{Binding LoginCommand}" 
+                    BackgroundColor="#512BD4" 
+                    TextColor="White" 
+                    CornerRadius="8"
+                    HeightRequest="50"
+                    FontAttributes="Bold"/>
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}" 
+                               IsVisible="{Binding IsBusy}" 
+                               Color="#512BD4"/>
+
+            <Label Text="{Binding MensajeError}" 
+                   TextColor="#DC2626" 
+                   HorizontalOptions="Center" 
+                   HorizontalTextAlignment="Center"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

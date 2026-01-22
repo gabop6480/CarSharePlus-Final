@@ -20,28 +20,45 @@ namespace CarSharePlus.Controllers.Api
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginModel model)
+        public async Task<ActionResult<Usuario>> Login([FromBody] LoginRequest request)
         {
+            // 1. Imprimir lo que llega (PARA DEPURAR)
+            Console.WriteLine($"[LOGIN INTENTO] Correo: '{request.Correo}' - Password recibido: '{request.Password}'");
+
+            // 2. Buscar usuario solo por correo primero
             var usuario = await _context.Usuarios
-                .FirstOrDefaultAsync(u => u.Correo == model.Correo && u.Password == model.Password);
+                .FirstOrDefaultAsync(u => u.Correo == request.Correo);
 
             if (usuario == null)
-                return Unauthorized(new { message = "Credenciales incorrectas" });
-
-            var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, usuario.Correo),
-                new Claim(ClaimTypes.Role, usuario.Rol),
-                new Claim("UsuarioId", usuario.Id.ToString())
-            };
+                Console.WriteLine("[LOGIN FALLO] El usuario no existe en la BD.");
+                return Unauthorized("Usuario no encontrado.");
+            }
 
-            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            var principal = new ClaimsPrincipal(identity);
+            // 3. Imprimir lo que hay en la BD (PARA DEPURAR)
+            Console.WriteLine($"[LOGIN BD] Usuario encontrado. Password en BD: '{usuario.Password}'");
 
-            // Esto crea la cookie que HttpClient guardará automáticamente
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+            // 4. Comparación DIRECTA (Texto plano) - Úsalo para probar si esto falla
+            // Si usas Hash, aquí deberías usar BCrypt.Verify o similar.
+            if (usuario.Password != request.Password)
+            {
+                Console.WriteLine("[LOGIN FALLO] La contraseña no coincide.");
+                return Unauthorized("Contraseña incorrecta.");
+            }
 
+            // 5. Login exitoso
+            Console.WriteLine("[LOGIN EXITOSO] Credenciales válidas.");
+
+            // Evitamos devolver la contraseña al cliente por seguridad
+            usuario.Password = "";
             return Ok(usuario);
+        }
+
+        // Clase auxiliar para recibir los datos (puedes ponerla dentro del mismo archivo o namespace)
+        public class LoginRequest
+        {
+            public string Correo { get; set; }
+            public string Password { get; set; }
         }
 
         [HttpPost("logout")]
