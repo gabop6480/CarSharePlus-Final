@@ -9,7 +9,7 @@ namespace CarSharePlusShared.Services
         private readonly HttpClient _httpClient;
         public static Usuario? UsuarioActual { get; private set; }
 
-        // El constructor recibe el cliente YA configurado en MauiProgram
+        // Recibe el cliente configurado en MauiProgram
         public AuthService(HttpClient httpClient)
         {
             _httpClient = httpClient;
@@ -20,14 +20,13 @@ namespace CarSharePlusShared.Services
             try
             {
                 var loginData = new { Correo = correo, Password = password };
-                // IMPORTANTE: Ruta correcta basada en tu Controller
                 var response = await _httpClient.PostAsJsonAsync("api/auth/login", loginData);
 
                 if (response.IsSuccessStatusCode)
                 {
                     var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
                     var usuario = await response.Content.ReadFromJsonAsync<Usuario>(options);
-                    UsuarioActual = usuario;
+                    UsuarioActual = usuario; // Guardamos el usuario
                     return usuario;
                 }
             }

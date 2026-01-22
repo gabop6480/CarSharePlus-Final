@@ -1,5 +1,6 @@
 ﻿using System.Net.Http.Json;
 using CarSharePlusShared.Models;
+using System.Text.Json;
 
 namespace CarSharePlusShared.Services
 {
@@ -7,7 +8,6 @@ namespace CarSharePlusShared.Services
     {
         private readonly HttpClient _httpClient;
 
-        // Constructor recibe el cliente compartido
         public VehiculoService(HttpClient httpClient)
         {
             _httpClient = httpClient;
@@ -17,8 +17,9 @@ namespace CarSharePlusShared.Services
         {
             try
             {
-                // Como usamos el cliente compartido, la cookie de sesión va incluida aquí
-                return await _httpClient.GetFromJsonAsync<List<Vehiculo>>("api/vehiculos") ?? new List<Vehiculo>();
+                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                // Esta llamada ahora incluye automáticamente la cookie de sesión
+                return await _httpClient.GetFromJsonAsync<List<Vehiculo>>("api/vehiculos", options) ?? new List<Vehiculo>();
             }
             catch (Exception ex)
             {

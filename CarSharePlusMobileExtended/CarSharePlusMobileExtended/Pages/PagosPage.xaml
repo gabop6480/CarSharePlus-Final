@@ -6,7 +6,7 @@
              x:DataType="vm:PagosViewModel"
              Title="Historial de Pagos" BackgroundColor="#F3F4F6">
     <Grid RowDefinitions="Auto,*">
-        <Button Text="Refrescar" Command="{Binding CargarPagosCommand}" Margin="10" BackgroundColor="White" TextColor="#512BD4" BorderColor="#512BD4" BorderWidth="1"/>
+     
         <CollectionView Grid.Row="1" ItemsSource="{Binding ListaPagos}" Margin="10">
             <CollectionView.EmptyView>
                 <Label Text="No hay pagos registrados." HorizontalOptions="Center" VerticalOptions="Center" TextColor="Gray"/>

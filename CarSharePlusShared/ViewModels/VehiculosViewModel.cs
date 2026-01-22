@@ -16,12 +16,13 @@ namespace CarSharePlusShared.ViewModels
         [ObservableProperty]
         private bool isBusy;
 
-        // Inyectamos el servicio real
         public VehiculosViewModel(VehiculoService vehiculoService)
         {
             _vehiculoService = vehiculoService;
             ListaVehiculos = new ObservableCollection<Vehiculo>();
-            Task.Run(CargarVehiculos); // Cargar al iniciar
+            // NO usar Task.Run aquí directamente si modificamos la UI después
+            // Mejor llamar al método async de forma segura
+            CargarVehiculosCommand.Execute(null);
         }
 
         [RelayCommand]
@@ -32,12 +33,22 @@ namespace CarSharePlusShared.ViewModels
 
             try
             {
+                // 1. Llamada a la API (Segundo plano)
                 var vehiculos = await _vehiculoService.GetVehiculosAsync();
-                ListaVehiculos.Clear();
-                foreach (var v in vehiculos)
+
+                // 2. Actualización de la UI (Hilo Principal - OBLIGATORIO EN WINDOWS)
+                MainThread.BeginInvokeOnMainThread(() =>
                 {
-                    ListaVehiculos.Add(v);
-                }
+                    ListaVehiculos.Clear();
+                    foreach (var v in vehiculos)
+                    {
+                        ListaVehiculos.Add(v);
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error al cargar: {ex.Message}");
             }
             finally
             {
