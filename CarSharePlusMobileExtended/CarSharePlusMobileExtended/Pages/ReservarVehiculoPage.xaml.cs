@@ -5,7 +5,7 @@ namespace CarSharePlusMobileExtended.Pages
 {
     public partial class ReservarVehiculoPage : ContentPage
     {
-        // CAMBIO: Inyectamos el ViewModel de la LISTA (plural)
+        // El constructor SOLO debe recibir el VehiculosViewModel
         public ReservarVehiculoPage(VehiculosViewModel vm)
         {
             InitializeComponent();

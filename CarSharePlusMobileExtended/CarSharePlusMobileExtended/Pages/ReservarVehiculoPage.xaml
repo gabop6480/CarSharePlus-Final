@@ -9,14 +9,6 @@
              BackgroundColor="#F3F4F6">
 
     <Grid RowDefinitions="Auto, *">
-        <Button Grid.Row="0" 
-                Text="Actualizar Lista" 
-                Command="{Binding CargarVehiculosCommand}" 
-                Margin="10"
-                BackgroundColor="White"
-                TextColor="#512BD4"
-                BorderColor="#512BD4"
-                BorderWidth="1"/>
 
         <CollectionView Grid.Row="1" 
                         ItemsSource="{Binding ListaVehiculos}" 

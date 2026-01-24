@@ -20,8 +20,7 @@ namespace CarSharePlusShared.ViewModels
         {
             _vehiculoService = vehiculoService;
             ListaVehiculos = new ObservableCollection<Vehiculo>();
-            // NO usar Task.Run aquí directamente si modificamos la UI después
-            // Mejor llamar al método async de forma segura
+            // Llamamos a cargar vehículos de forma segura
             CargarVehiculosCommand.Execute(null);
         }
 
@@ -33,10 +32,11 @@ namespace CarSharePlusShared.ViewModels
 
             try
             {
-                // 1. Llamada a la API (Segundo plano)
+                // 1. Descarga los datos (esto ocurre en segundo plano)
                 var vehiculos = await _vehiculoService.GetVehiculosAsync();
 
-                // 2. Actualización de la UI (Hilo Principal - OBLIGATORIO EN WINDOWS)
+                // 2. CORRECCIÓN CRÍTICA PARA WINDOWS:
+                // Usar el Hilo Principal para actualizar la lista visual
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
                     ListaVehiculos.Clear();
@@ -48,7 +48,7 @@ namespace CarSharePlusShared.ViewModels
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Error al cargar: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Error cargando vehículos: {ex.Message}");
             }
             finally
             {
